@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="module_category_renewal" model="ir.module.category">
+            <field name="name">Renovaciones</field>
+            <field name="description">Permisos para módulo de Renovaciones</field>
+            <field name="parent_id" ref="base.module_category_sales"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="renewal_group_user" model="res.groups">
+            <field name="name">Usuario</field>
+            <field name="comment">Usuario Regular</field>
+            <field name="category_id" ref="module_category_renewal"/>
+        </record>
+
+        <record id="renewal_group_admin" model="res.groups">
+            <field name="name">Administrador</field>
+            <field name="comment">Super Usuario</field>
+            <field name="category_id" ref="module_category_renewal"/>
+            <field name="implied_ids" eval="[(4, ref('renewal_group_user'))]"/>
+        </record>
+
+        <record model="ir.model.access" id="renewal_access_user">
+            <field name="name">Renovaciones User</field>
+            <field name="model_id" ref="andros-aesa.model_res_renewal"/>
+             <field name="group_id" ref="renewal_group_user"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record model="ir.model.access" id="renewal_access_admin">
+            <field name="name">Renovaciones Admin</field>
+            <field name="model_id" ref="andros-aesa.model_res_renewal"/>
+             <field name="group_id" ref="renewal_group_admin"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

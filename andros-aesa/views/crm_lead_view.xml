@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="crm_lead_aesa_view" model="ir.ui.view">
+        <field name="name">crm.lead.aesa.view</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Información específica">
+                    <group>
+                        <field name="purchase_licenses"/>
+                        <field name="system_implementation"/>
+                        <field name="system_customization"/>
+                        <field name="training"/>
+                        <field name="hardware_software"/>
+                        <field name="have_systems_area"/>
+                        <field name="computers_in_network"/>
+                    </group>
+                </page>
+                <page string="Información adicional">
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </page>
+            </notebook>
+            <xpath expr="//field[@name='name']" position="before">
+                <div>
+                    <field name="lead_sequence" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
+                </div>
+                <div>
+                    <field name="opportunity_sequence" attrs="{'invisible': [('type', '=', 'lead')]}"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='team_id']" position="after">
+                <separator string="Probabilidad" colspan="2"/>
+                <field name="necessity"/>
+                <field name="impact"/>
+                <field name="time"/>
+                <field name="authority"/>
+            </xpath>
+            <xpath expr="//field[@name='team_id']" position="after">
+                <field name="personality"/>
+            </xpath>
+            <xpath expr="//field[@name='source_id']" position="attributes">
+                <attribute name="string">Origen del prospecto</attribute>
+            </xpath>
+            <xpath expr="//page[@name='lead']//field[@name='source_id']" position="attributes">
+                <attribute name="string">Origen del prospecto</attribute>
+            </xpath>
+            <xpath expr="//field[@name='street']" position="attributes">
+                <attribute name="placeholder">Calle y #</attribute>
+            </xpath>
+            <xpath expr="//field[@name='street2']" position="attributes">
+                <attribute name="placeholder">Colonia</attribute>
+            </xpath>
+            <xpath expr="//field[@name='city']" position="attributes">
+                <attribute name="placeholder">Delegación</attribute>
+            </xpath>
+            <xpath expr="//field[@name='country_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="sequence_opportunity" model="ir.sequence">
+            <field name="name">sequence.opportunity</field>
+            <field name="code">sequence.opportunity</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">OP</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="sequence_lead" model="ir.sequence">
+            <field name="name">sequence.lead</field>
+            <field name="code">sequence.lead</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">IN</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="sequence_res_partner" model="ir.sequence">
+            <field name="name">sequence.res.partner</field>
+            <field name="code">sequence.res.partner</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">CLI</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="sequence_res_renewal" model="ir.sequence">
+            <field name="name">sequence.res.renewal</field>
+            <field name="code">sequence.res.renewal</field>
+            <field name="active">True</field>
+            <field name="prefix">RENOV/</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field eval="False" name="company_id"/>
+        </record>
+    </data>
+
+
+</odoo>

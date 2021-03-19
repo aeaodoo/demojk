@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="action_renewal_list" model="ir.actions.act_window">
+            <field name="name">Renovaciones</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.renewal</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Renovaciones" id="menu_root_renewals" sequence="0" groups="andros-aesa.renewal_group_user"
+                  web_icon="andros-aesa,static/description/app.png"/>
+
+        <menuitem id="menu_renewals" name="Renovaciones" action="action_renewal_list" parent="menu_root_renewals"
+                  sequence="1"/>
+        <menuitem id="menu_renewals_clients" name="Clientes" action="base.action_partner_form" parent="menu_root_renewals"
+                  sequence="2"/>
+
+        <record id="res_renewal_tree_view" model="ir.ui.view">
+            <field name="name">res.renewal.tree.view</field>
+            <field name="model">res.renewal</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Renovaciones" decoration-info="state=='draft'" decoration-warning="state=='expired'" decoration-danger="state=='cancel'">
+					<field name="name"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="res_renewal_view_search" model="ir.ui.view">
+            <field name="name">res.renewal.search</field>
+            <field name="model">res.renewal</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Renovaciones">
+					<separator/>
+					<filter name="new" string="Nuevas" domain="[('state','=','draft')]"/>
+					<filter name="expired" string="Vencidas" domain="[('state','=','expired')]"/>
+					<filter name="cancel" string="Canceladas" domain="[('state','=','cancel')]"/>
+					<field name="name"/>
+					<separator/>
+                    <group expand="0" string="Agrupar por">
+						<filter name="group_by_state" string="Estado" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="res_renewal_form_view" model="ir.ui.view">
+            <field name="name">res.renewal.form</field>
+            <field name="model">res.renewal</field>
+            <field name="arch" type="xml">
+                <form string="Renovaciones">
+                <header>
+					<button string="Cambiar a Borrador" type="object" name="action_draft" attrs="{'invisible': [('state','in',('draft'))]}"
+                            groups="andros-aesa.renewal_group_admin" />
+					<button string="Cancelar" type="object" name="action_cancel" attrs="{'invisible': [('state','in',('expired','cancel'))]}"
+                            groups="andros-aesa.renewal_group_admin" />
+					<field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                         <h2>Folio: <field name="name" class="oe_inline"/></h2>
+                    </div>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
