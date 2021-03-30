@@ -26,12 +26,14 @@ class CrmLead(models.Model):
     lead_sequence = fields.Char(
         string="Iniciativa",
         size=24,
-        default=get_default_lead_sequence
+        default=get_default_lead_sequence,
+        readonly=True
     )
     opportunity_sequence = fields.Char(
         string="Oportunidad",
         size=24,
-        default=get_default_opportunity_sequence
+        default=get_default_opportunity_sequence,
+        readonly=True
     )
 
     purchase_licenses = fields.Boolean('Compra de licencias')
@@ -41,7 +43,7 @@ class CrmLead(models.Model):
     hardware_software = fields.Boolean('Hardware o Software')
     have_systems_area = fields.Boolean('Cuentan con area de sistemas')
     computers_in_network = fields.Integer('Cuantos equipo hay en su red')
-    description = fields.Text('Descripción')
+    description_aesa = fields.Text('Descripción')
     personality = fields.Selection(
         [
             ('amarillo', 'Amarillo'),
@@ -95,15 +97,8 @@ class CrmLead(models.Model):
     @api.model
     def create(self, vals):
         rec = super(CrmLead, self).create(vals)
-        if(rec.type == 'opportunity'):
-            current_sequence = self.get_default_opportunity_sequence()
-            if(rec.opportunity_sequence == current_sequence):
-                vals['opportunity_sequence'] = \
-                self.env['ir.sequence'].next_by_code('sequence.opportunity')
-        else:
-            current_sequence = self.get_default_lead_sequence()
-            if(rec.lead_sequence == current_sequence):
-                vals['lead_sequence'] = \
-                self.env['ir.sequence'].next_by_code('sequence.lead')
-
+        vals['opportunity_sequence'] = \
+        self.env['ir.sequence'].next_by_code('sequence.opportunity')
+        vals['lead_sequence'] = \
+        self.env['ir.sequence'].next_by_code('sequence.lead')
         return rec

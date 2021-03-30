@@ -16,6 +16,7 @@ Modifications for AESA.
     'data': [
         'security/security.xml',
         'data/sequences.xml',
+        'data/cron_data.xml',
         'views/crm_lead_view.xml',
         'views/res_partner_view.xml',
         'views/res_renewal_views.xml',

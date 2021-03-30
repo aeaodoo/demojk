@@ -20,7 +20,7 @@
                 </page>
                 <page string="Información adicional">
                     <group>
-                        <field name="description"/>
+                        <field name="description_aesa"/>
                     </group>
                 </page>
             </notebook>
