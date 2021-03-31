@@ -11,7 +11,8 @@ Modifications for AESA.
     """,
     'website': 'http://www.ikom.mx',
     'depends': [
-        'crm'
+        'crm',
+        'sale_subscription'
     ],
     'data': [
         'security/security.xml',
