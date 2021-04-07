@@ -6,6 +6,32 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="CRM">
+                    <group>
+                        <field name="personality"/>
+                        <field name="purchase_licenses"/>
+                        <field name="system_implementation"/>
+                        <field name="system_customization"/>
+                        <field name="training"/>
+                        <field name="hardware_software"/>
+                        <field name="have_systems_area"/>
+                        <field name="computers_in_network"/>
+                    </group>
+                    <group>
+                        <field name="has_server"/>
+                        <field name="server_type" attrs="{'invisible': [('has_server', '!=', '1')]}"/>
+                        <field name="recurring_customer"/>
+                        <field name="number_rings" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
+                        <field name="last_sale" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
+                        <field name="aspel_systems"/>
+                    </group>
+                    <group>
+                        <field name="description_aesa"/>
+                    </group>
+                </page>
+            </notebook>
+
             <xpath expr="//field[@name='name']" position="before">
                 <div>
                     <label for="partner_sequence" class="oe_edit_only"/>

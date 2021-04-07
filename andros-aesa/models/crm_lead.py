@@ -7,14 +7,6 @@ _logger = logging.getLogger(__name__)
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
-    def get_user_numbers_selection(self):
-        selection = []
-        for x in range(1, 51):
-            val = str(x)
-            tpl = (val, val)
-            selection.append(tpl)
-        return selection
-
     def get_default_lead_sequence(self):
         sequence = self.env['ir.sequence'].search(
             [('code','=','sequence.lead')]
@@ -114,15 +106,9 @@ class CrmLead(models.Model):
         'Número de timbres'
     )
     last_sale = fields.Date('Fecha de última venta')
-    user_numbers = fields.Selection(
-        get_user_numbers_selection, 'Número de usuarios'
-    )
-    serial_number_aesa = fields.Char('Número de serie')
-    suscription = fields.Boolean('Suscripción')
-    perpetual = fields.Boolean('Perpetua')
-    aspel_system_ids = fields.Many2many(
+    aspel_systems = fields.One2many(
         'aspel.system',
-        string='Sistema ASPEL',
+        'lead_id'
     )
 
     @api.onchange('necessity', 'impact', 'time', 'authority')
@@ -147,3 +133,41 @@ class CrmLead(models.Model):
         vals['lead_sequence'] = \
         self.env['ir.sequence'].next_by_code('sequence.lead')
         return rec
+
+
+    def _create_lead_partner_data(self, name, is_company, parent_id=False):
+        res = super(CrmLead, self)._create_lead_partner_data(
+            name, is_company, parent_id
+        )
+
+        res['purchase_licenses'] = self.purchase_licenses
+        res['system_implementation'] = self.system_implementation
+        res['system_customization'] = self.system_customization
+        res['training'] = self.training
+        res['hardware_software'] = self.hardware_software
+        res['have_systems_area'] = self.have_systems_area
+        res['computers_in_network'] = self.computers_in_network
+        res['description_aesa'] = self.description_aesa
+        res['personality'] = self.personality
+        res['necessity'] = self.necessity
+        res['impact'] = self.impact
+        res['time'] = self.time
+        res['authority'] = self.authority
+        res['has_server'] = self.has_server
+        res['server_type'] = self.server_type
+        res['recurring_customer'] = self.recurring_customer
+        res['number_rings'] = self.number_rings
+        res['last_sale'] = self.last_sale
+
+        aspel_lines = []
+
+        for line in self.aspel_systems:
+            aspel_lines.append((0, 0, {
+                'name': line.name,
+                'user_numbers': line.user_numbers,
+                'serial_number_aesa': line.serial_number_aesa,
+                'type': line.type,
+            }))
+
+        res['aspel_systems'] = aspel_lines
+        return res

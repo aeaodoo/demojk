@@ -30,11 +30,7 @@
                         <field name="recurring_customer"/>
                         <field name="number_rings" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
                         <field name="last_sale" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
-                        <field name="aspel_system_ids" widget="many2many_tags"/>
-                        <field name="user_numbers"/>
-                        <field name="serial_number_aesa"/>
-                        <field name="suscription"/>
-                        <field name="perpetual"/>
+                        <field name="aspel_systems"/>
                     </group>
                 </page>
             </notebook>

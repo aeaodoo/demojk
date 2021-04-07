@@ -21,7 +21,7 @@ Modifications for AESA.
         'views/crm_lead_view.xml',
         'views/res_partner_view.xml',
         'views/res_renewal_views.xml',
-
+        'views/aspel_system.xml'
     ],
     'application': False,
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="aspel_system_tree" model="ir.ui.view">
+        <field name="name">aspel.system.tree</field>
+        <field name="model">aspel.system</field>
+        <field name="arch" type="xml">
+            <tree string="AspelSystem" editable="bottom">
+                <field name="name"/>
+                <field name="user_numbers"/>
+                <field name="serial_number_aesa"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>
