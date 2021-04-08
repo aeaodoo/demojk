@@ -16,15 +16,17 @@ class AspelSystem(models.Model):
 
         return selection
 
-    name = fields.Char('Nombre')
+    aspel_id = fields.Many2one('aspel.names', string='Nombre', required=True)
     user_numbers = fields.Selection(
         get_user_numbers_selection, 'Número de usuarios'
     )
     serial_number_aesa = fields.Char('Número de serie')
+    version = fields.Char('Versión')
     type = fields.Selection([
         ('suscription', 'Suscripción'),
         ('perpetua', 'Perpetua')
-    ], 'Tipo', required=True)
+    ], string='Tipo', required=True)
 
     lead_id = fields.Many2one('crm.lead')
     partner_id = fields.Many2one('res.partner')
+    new_date = fields.Date('Fecha renovación')

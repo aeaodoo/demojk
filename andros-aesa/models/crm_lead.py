@@ -163,10 +163,12 @@ class CrmLead(models.Model):
 
         for line in self.aspel_systems:
             aspel_lines.append((0, 0, {
-                'name': line.name,
+                'aspel_id': line.aspel_id.id,
                 'user_numbers': line.user_numbers,
                 'serial_number_aesa': line.serial_number_aesa,
                 'type': line.type,
+                'version': line.version,
+                'new_date': line.new_date,
             }))
 
         res['aspel_systems'] = aspel_lines

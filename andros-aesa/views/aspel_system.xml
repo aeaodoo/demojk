@@ -6,10 +6,12 @@
         <field name="model">aspel.system</field>
         <field name="arch" type="xml">
             <tree string="AspelSystem" editable="bottom">
-                <field name="name"/>
+                <field name="aspel_id"/>
                 <field name="user_numbers"/>
                 <field name="serial_number_aesa"/>
                 <field name="type"/>
+                <field name="new_date"/>
+                <field name="version"/>
             </tree>
         </field>
     </record>
