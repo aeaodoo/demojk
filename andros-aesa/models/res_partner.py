@@ -22,6 +22,7 @@ class ResPartner(models.Model):
         readonly=True
     )
     renewals_count = fields.Integer(compute='_compute_renewals_count', string=u"Número de Renovaciones")
+    has_renewal = fields.Boolean(compute='_compute_renewals_count', store=True)
     purchase_licenses = fields.Boolean('Compra de licencias')
     system_implementation = fields.Boolean('Implementación de sistemas')
     system_customization = fields.Boolean('Personalización de sistemas')

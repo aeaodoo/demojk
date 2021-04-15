@@ -22,11 +22,7 @@ class AspelSystem(models.Model):
     )
     serial_number_aesa = fields.Char('Número de serie')
     version = fields.Char('Versión')
-    type = fields.Selection([
-        ('suscription', 'Suscripción'),
-        ('perpetua', 'Perpetua')
-    ], string='Tipo', required=True)
-
+    type_id = fields.Many2one('aspel.types', string='Tipo', required=True)
     lead_id = fields.Many2one('crm.lead')
     partner_id = fields.Many2one('res.partner')
     new_date = fields.Date('Fecha renovación')

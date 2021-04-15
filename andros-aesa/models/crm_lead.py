@@ -23,6 +23,21 @@ class CrmLead(models.Model):
 
         return next
 
+    def _compute_planned_revenue_aesa(self):
+        total = 0
+        if self.partner_id:
+            sale_orders_obj = self.env['sale.order']
+            orders = sale_orders_obj.search([
+                '&',
+                ('partner_id', '=', self.partner_id.id),
+                ('state', '=', 'draft')
+            ])
+
+            for order in orders:
+                total += order.amount_untaxed
+
+        self.planned_revenue_aesa = total
+
     lead_sequence = fields.Char(
         string="Iniciativa",
         size=24,
@@ -110,6 +125,7 @@ class CrmLead(models.Model):
         'aspel.system',
         'lead_id'
     )
+    planned_revenue_aesa = fields.Float('Ingreso estimado', digits=(8,2), compute='_compute_planned_revenue_aesa')
 
     @api.onchange('necessity', 'impact', 'time', 'authority')
     def on_change_probability_values(self):
@@ -166,7 +182,7 @@ class CrmLead(models.Model):
                 'aspel_id': line.aspel_id.id,
                 'user_numbers': line.user_numbers,
                 'serial_number_aesa': line.serial_number_aesa,
-                'type': line.type,
+                'type_id': line.type_id.id,
                 'version': line.version,
                 'new_date': line.new_date,
             }))

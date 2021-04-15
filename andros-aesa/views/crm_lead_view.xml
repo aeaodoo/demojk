@@ -6,6 +6,16 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_lead_view_form" />
         <field name="arch" type="xml">
+            <xpath expr="//div[@class='oe_button_box']" position="inside">
+                <button name="toggle_active" type="object"
+                    class="oe_stat_button" icon="fa-dollar">
+                    <div class="o_stat_info">
+                        <field name="planned_revenue_aesa" class="o_stat_value"/>
+                        <span class="o_stat_text">Ingreso estimado</span>
+                    </div>
+                </button>
+            </xpath>
+
             <notebook position="inside">
                 <page string="Información específica">
                     <group>

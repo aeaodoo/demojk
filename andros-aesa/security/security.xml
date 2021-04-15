@@ -20,6 +20,17 @@
             <field name="comment">Super Usuario</field>
             <field name="category_id" ref="module_category_renewal"/>
             <field name="implied_ids" eval="[(4, ref('renewal_group_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record model="ir.model.access" id="renewal_access_all_read">
+            <field name="name">Renovaciones All Read</field>
+            <field name="model_id" ref="andros-aesa.model_res_renewal"/>
+             <field name="group_id" ref="base.group_user"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
         </record>
 
         <record model="ir.model.access" id="renewal_access_user">
@@ -75,6 +86,26 @@
         <record model="ir.model.access" id="aspel_names_admin">
             <field name="name">Catalago Nombres ASPEL Admin</field>
             <field name="model_id" ref="andros-aesa.model_aspel_names"/>
+            <field name="group_id" ref="renewal_group_admin"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="aspel_types_user">
+            <field name="name">Catalago Tipos ASPEL User</field>
+            <field name="model_id" ref="andros-aesa.model_aspel_types"/>
+            <field name="group_id" ref="renewal_group_user"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="aspel_types_admin">
+            <field name="name">Catalago Tipos ASPEL Admin</field>
+            <field name="model_id" ref="andros-aesa.model_aspel_types"/>
             <field name="group_id" ref="renewal_group_admin"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_read" eval="True"/>
