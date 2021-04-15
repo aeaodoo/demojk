@@ -46,80 +46,25 @@ class ResRenewal(models.Model):
     title = fields.Many2one(string=u'Título', related='partner_id.title')
     category_id = fields.Many2many(string=u'Categorías', related='partner_id.category_id')
     # ------------------------------------------------------
-    purchase_licenses = fields.Boolean('Compra de licencias')
-    system_implementation = fields.Boolean('Implementación de sistemas')
-    system_customization = fields.Boolean('Personalización de sistemas')
-    training = fields.Boolean('Capacitación')
-    hardware_software = fields.Boolean('Hardware o Software')
-    have_systems_area = fields.Boolean('Cuentan con area de sistemas')
-    computers_in_network = fields.Integer('Cuantos equipo hay en su red')
-    description_aesa = fields.Text('Descripción')
-    personality = fields.Selection(
-        [
-            ('amarillo', 'Amarillo'),
-            ('verde', 'Verde'),
-            ('azul', 'Azul'),
-            ('Rojo', 'Rojo'),
-        ],
-        'Personalidad del cliente'
-    )
-    necessity = fields.Selection([
-        ('25_1', 'Compra de licencias'),
-        ('25_2', 'Suscripción'),
-        ('25_3', 'Timbres'),
-        ('25_4', 'Implementación de sistemas'),
-        ('25_5', 'Personalización de sistemas'),
-        ('25_6', 'Capacitación'),
-        ('25_7', 'Software y Hardware'),
-    ], 'Necesidad')
-    impact = fields.Selection([
-        ('5', 'Bajo'),
-        ('15', 'Medio'),
-        ('25', 'Alto'),
-    ], 'Impacto')
-    time = fields.Selection([
-        ('25', 'Inmediato'),
-        ('17', '1 Semana'),
-        ('12', '2 Semanas'),
-        ('7', 'Tiempo indefinido'),
-    ], 'Tiempo')
-    authority = fields.Selection([
-        ('25', 'Contacto principal'),
-        ('17', 'Jefe inmediato'),
-        ('12', 'Director'),
-        ('7', 'Consejo'),
-    ], 'Autoridad')
-
-    has_server = fields.Selection(
-        [('0', 'Sin servidor'), ('1', 'Servidor propio')],
-        'Cuentan con servidor'
-    )
-    server_type = fields.Selection(
-        [('local', 'Servidor local'), ('cloud', 'Propio cloud')],
-        'Tipo de servidor'
-    )
-    recurring_customer = fields.Selection(
-        [('0', 'No'), ('1', 'Si')], 'Cliente recurrente de timbres'
-    )
-    number_rings = fields.Selection(
-        [('50', '50'),
-         ('200', '200'),
-         ('400', '400'),
-         ('1000', '1000'),
-         ('2000', '2000'),
-         ('5000', '5000'),
-         ('10000', '10000'),
-         ('20000', '20000'),
-         ('50000', '50000'),
-         ('70000', '70000'),
-         ('100000', '100000')],
-        'Número de timbres'
-    )
-    last_sale = fields.Date('Fecha de última venta')
-    aspel_systems = fields.One2many(
-        'aspel.system',
-        'partner_id'
-    )
+    purchase_licenses = fields.Boolean('Compra de licencias', related='partner_id.purchase_licenses', readonly=False)
+    system_implementation = fields.Boolean('Implementación de sistemas', related='partner_id.system_implementation', readonly=False)
+    system_customization = fields.Boolean('Personalización de sistemas', related='partner_id.system_customization', readonly=False)
+    training = fields.Boolean('Capacitación', related='partner_id.training', readonly=False)
+    hardware_software = fields.Boolean('Hardware o Software', related='partner_id.hardware_software', readonly=False)
+    have_systems_area = fields.Boolean('Cuentan con area de sistemas', related='partner_id.have_systems_area', readonly=False)
+    computers_in_network = fields.Integer('Cuantos equipo hay en su red', related='partner_id.computers_in_network', readonly=False)
+    description_aesa = fields.Text('Descripción', related='partner_id.description_aesa', readonly=False)
+    personality = fields.Selection('Personalidad del cliente', related='partner_id.personality', readonly=False)
+    necessity = fields.Selection('Necesidad', related='partner_id.necessity', readonly=False)
+    impact = fields.Selection('Impacto', related='partner_id.impact', readonly=False)
+    time = fields.Selection('Tiempo', related='partner_id.time', readonly=False)
+    authority = fields.Selection('Autoridad', related='partner_id.authority', readonly=False)
+    has_server = fields.Selection('Cuentan con servidor', related='partner_id.has_server', readonly=False)
+    server_type = fields.Selection('Tipo de servidor', related='partner_id.server_type', readonly=False)
+    recurring_customer = fields.Selection('Cliente recurrente de timbres', related='partner_id.recurring_customer', readonly=False)
+    number_rings = fields.Selection('Número de timbres', related='partner_id.number_rings', readonly=False)
+    last_sale = fields.Date('Fecha de última venta', related='partner_id.last_sale', readonly=False)
+    aspel_systems = fields.One2many(related='partner_id.aspel_systems', readonly=False)
 
     def action_draft(self):
         self.write({'state': 'draft'})
@@ -138,7 +83,7 @@ class ResRenewal(models.Model):
 
     def action_renovations_to_expire(self):
         # ren_conf = self.env['res.renewal.config'].search()
-        ren_conf = {'days_to_expire': 1}
+        ren_conf = {'days_to_expire': 7}
         if ren_conf and ren_conf['days_to_expire']:
             _logger.info("::::: Planificador de Renovaciones a vencer ejecutado! :::::")
             # days = int(ren_conf.days_to_expire)
