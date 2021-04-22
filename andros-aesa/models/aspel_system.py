@@ -6,6 +6,8 @@ _logger = logging.getLogger(__name__)
 
 class AspelSystem(models.Model):
     _name = 'aspel.system'
+    _description = 'Aspel System'
+    _rec_name = 'aspel_id'
 
     def get_user_numbers_selection(self):
         selection = []
@@ -23,6 +25,6 @@ class AspelSystem(models.Model):
     serial_number_aesa = fields.Char('Número de serie')
     version = fields.Char('Versión')
     type_id = fields.Many2one('aspel.types', string='Tipo', required=True)
-    lead_id = fields.Many2one('crm.lead')
-    partner_id = fields.Many2one('res.partner')
+    lead_id = fields.Many2one('crm.lead', string='Oportunidad')
+    partner_id = fields.Many2one('res.partner', string='Cliente')
     new_date = fields.Date('Fecha renovación')

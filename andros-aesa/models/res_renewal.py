@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, api, _
 from datetime import datetime, date, timedelta
+from dateutil.relativedelta import relativedelta
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -26,6 +27,7 @@ class ResRenewal(models.Model):
         ('expired', 'Vencido'),
         ('cancel', 'Cancelado')], string='Estado', required=True, readonly=True, default='draft')
 
+    partner_sequence = fields.Char(related='partner_id.partner_sequence')
     type = fields.Selection(related='partner_id.type')
     is_company = fields.Boolean(related='partner_id.is_company')
     street = fields.Char(related='partner_id.street')
@@ -64,7 +66,17 @@ class ResRenewal(models.Model):
     recurring_customer = fields.Selection('Cliente recurrente de timbres', related='partner_id.recurring_customer', readonly=False)
     number_rings = fields.Selection('Número de timbres', related='partner_id.number_rings', readonly=False)
     last_sale = fields.Date('Fecha de última venta', related='partner_id.last_sale', readonly=False)
+
     aspel_systems = fields.One2many(related='partner_id.aspel_systems', readonly=False)
+    aspel_system_id = fields.Many2one('aspel.system', string='Sistema')
+    # aspel_system_id = fields.One2many('aspel.system','partner_id')
+    user_numbers = fields.Selection(related='aspel_system_id.user_numbers')
+    serial_number_aesa = fields.Char(related='aspel_system_id.serial_number_aesa')
+    version = fields.Char('Versión', related='aspel_system_id.version')
+    type_id = fields.Many2one(related='aspel_system_id.type_id', string='Tipo')
+    # lead_id = fields.Many2one('crm.lead')
+    # partner_id = fields.Many2one('res.partner')
+    new_date = fields.Date('Fecha renovación', related='aspel_system_id.new_date')
 
     def action_draft(self):
         self.write({'state': 'draft'})
@@ -81,6 +93,34 @@ class ResRenewal(models.Model):
     def action_to_expire(self):
         self.write({'to_expire': True})
 
+    def action_renew(self):
+        value = self.aspel_system_id.type_id.value
+        sys_type = self.aspel_system_id.type_id.value_type
+        days = months = years = 0
+        if sys_type == 'dias':
+            days = value
+        elif sys_type == 'meses':
+            months = value
+        elif sys_type == 'bimestres':
+            months = value * 2
+        elif sys_type == 'trimestres':
+            months = value * 3
+        elif sys_type == 'year':
+            years = value
+        date_sys = self.aspel_system_id.new_date
+        date_renew = date_sys + relativedelta(years=years, months=months, days=days)
+        if date_renew != date_sys:
+            self.aspel_system_id.write({'new_date': date_renew})
+        renew_data = {'to_expire': False}
+        if self.state != 'process':
+            renew_data.update({'state': 'process'})
+        self.write(renew_data)
+        _logger.info(f"::::: Sistema con folio [{self.name}] renovado correctamente hasta {date_renew}! :::::")
+
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        self.aspel_system_id = False
+
     def action_renovations_to_expire(self):
         # ren_conf = self.env['res.renewal.config'].search()
         ren_conf = {'days_to_expire': 7}
@@ -89,7 +129,7 @@ class ResRenewal(models.Model):
             # days = int(ren_conf.days_to_expire)
             days = int(ren_conf['days_to_expire'])
             date_exp = (datetime.now() + timedelta(days=days)).date()
-            domain = [('date_end', '<=', date_exp),
+            domain = [('new_date', '<=', date_exp),
                       ('state', '=', 'process')
                       ]
             ren_ids = self.search(domain)
@@ -102,11 +142,11 @@ class ResRenewal(models.Model):
 
     def schedule_renovations(self):
         _logger.info("::::: Starting Renovations schedule :::::")
-        dominio = [('date_end', '<=', date.today()),
+        self.action_renovations_to_expire()
+        dominio = [('new_date', '<', date.today()),
                    ('state', '=', 'process'),
                    ]
         renov_ids = self.search(dominio)
-        self.action_renovations_to_expire()
         for ren in renov_ids:
             ren.action_expired()
         _logger.info("::::: Finished Renovations schedule :::::")

@@ -55,8 +55,11 @@
                       decoration-danger="state=='expired'" decoration-muted="state=='cancel'">
 					<field name="name"/>
                     <field name="partner_id"/>
-                    <field name="date_start"/>
-                    <field name="date_end"/>
+                    <field name="partner_sequence"/>
+                    <field name="aspel_system_id"/>
+<!--                    <field name="date_start"/>-->
+<!--                    <field name="date_end"/>-->
+                    <field name="new_date"/>
                     <field name="state"/>
                     <field name="to_expire" invisible="1"/>
                 </tree>
@@ -100,6 +103,8 @@
                             groups="andros-aesa.renewal_group_admin" />
 					<button string="Procesar" type="object" name="action_process" attrs="{'invisible': [('state','in',('process','cancel'))]}"
                             groups="andros-aesa.renewal_group_admin" />
+					<button string="Renovar" type="object" name="action_renew" attrs="{'invisible': ['|',('state','in',('draft','cancel')),('to_expire','=',False)]}"
+                            groups="andros-aesa.renewal_group_admin" class="oe_highlight"/>
 					<button string="Cancelar" type="object" name="action_cancel" attrs="{'invisible': [('state','in',('expired','cancel'))]}"
                             groups="andros-aesa.renewal_group_admin" />
 					<field name="state" widget="statusbar"/>
@@ -144,35 +149,50 @@
                             <field name="title" options="{&quot;no_open&quot;: True}" placeholder="e.g. Mister" attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Etiquetas..."/>
                         </group>
+                        <group name="selector" string="Seleccionar sistema">
+                            <field name="aspel_system_id" domain="[('partner_id','=',partner_id)]"/>
+                            <field name="to_expire"/>
+                        </group>
+                        <group name="data" string="Datos Sistema">
+                            <field name="user_numbers"/>
+                            <field name="serial_number_aesa"/>
+                            <field name="version"/>
+                            <field name="type_id"/>
+                            <field name="new_date"/>
+                        </group>
                         <group name="vigencia" string="Vigencia">
                             <field name="date_start"/>
                             <field name="date_end"/>
-                            <field name="to_expire"/>
+<!--                            <field name="to_expire"/>-->
                         </group>
                     </group>
                     <notebook>
-                        <page string="CRM">
-                            <group>
-                                <field name="personality"/>
-                                <field name="purchase_licenses"/>
-                                <field name="system_implementation"/>
-                                <field name="system_customization"/>
-                                <field name="training"/>
-                                <field name="hardware_software"/>
-                                <field name="have_systems_area"/>
-                                <field name="computers_in_network"/>
+                        <page name="crm" string="CRM">
+                            <group name="container_row">
+                                <group name="g1">
+                                    <field name="personality"/>
+                                    <field name="purchase_licenses"/>
+                                    <field name="system_implementation"/>
+                                    <field name="system_customization"/>
+                                    <field name="training"/>
+                                    <field name="hardware_software"/>
+                                    <field name="have_systems_area"/>
+                                    <field name="computers_in_network"/>
+                                </group>
+                                <group name="g2">
+                                    <field name="has_server"/>
+                                    <field name="server_type" attrs="{'invisible': [('has_server', '!=', '1')]}"/>
+                                    <field name="recurring_customer"/>
+                                    <field name="number_rings" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
+                                    <field name="last_sale" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
+                                </group>
                             </group>
-                            <group>
-                                <field name="has_server"/>
-                                <field name="server_type" attrs="{'invisible': [('has_server', '!=', '1')]}"/>
-                                <field name="recurring_customer"/>
-                                <field name="number_rings" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
-                                <field name="last_sale" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
-                                <field name="aspel_systems"/>
-                            </group>
-                            <group>
+                            <group name="g3">
                                 <field name="description_aesa"/>
                             </group>
+<!--                            <group name="g4">-->
+<!--                                <field name="aspel_systems"/>-->
+<!--                            </group>-->
                         </page>
                     </notebook>
 

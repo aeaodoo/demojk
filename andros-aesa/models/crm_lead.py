@@ -100,9 +100,25 @@ class CrmLead(models.Model):
         'Cuentan con servidor'
     )
     server_type = fields.Selection(
-        [('local', 'Servidor local'),('cloud', 'Propio cloud')],
+        [
+            ('local', 'Servidor local'),
+            ('cloud', 'Propio cloud'),
+            ('cloud_aesa', 'Cloud AESA'),
+            ('cloud_basico', 'Cloud básico'),
+            ('cloud_estandar', 'Cloud Server estándar'),
+            ('cloud_premium', 'Cloud Server premium'),
+            ('cloud_flex', 'Cloud Server flex'),
+            ('cloud_l', 'Cloud Server L'),
+            ('cloud_xl', 'Cloud Server XL'),
+            ('cloud_xxl', 'Cloud Server XXL'),
+            ('cloud_xxxl', 'Cloud Server XXXL'),
+            ('cloud_dedicado', 'Cloud Server dedicado'),
+        ],
         'Tipo de servidor'
     )
+    cut_date = fields.Date('Fecha de corte')
+    ip_server = fields.Char('Dirección IP')
+    url_server = fields.Char('OP Activa (URL)')
     recurring_customer = fields.Selection(
         [('0', 'No'),('1', 'Si')], 'Cliente recurrente de timbres'
     )
@@ -171,6 +187,9 @@ class CrmLead(models.Model):
         res['authority'] = self.authority
         res['has_server'] = self.has_server
         res['server_type'] = self.server_type
+        res['cut_date'] = self.cut_date
+        res['ip_server'] = self.ip_server
+        res['url_server'] = self.url_server
         res['recurring_customer'] = self.recurring_customer
         res['number_rings'] = self.number_rings
         res['last_sale'] = self.last_sale

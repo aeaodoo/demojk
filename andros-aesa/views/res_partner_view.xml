@@ -21,6 +21,9 @@
                     <group>
                         <field name="has_server"/>
                         <field name="server_type" attrs="{'invisible': [('has_server', '!=', '1')]}"/>
+                        <field name="cut_date" attrs="{'invisible': [('has_server', '!=', '1')]}"/>
+                        <field name="ip_server" attrs="{'invisible': [('has_server', '!=', '1')]}"/>
+                        <field name="url_server" attrs="{'invisible': [('has_server', '!=', '1')]}" widget="url"/>
                         <field name="recurring_customer"/>
                         <field name="number_rings" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
                         <field name="last_sale" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
@@ -35,7 +38,7 @@
             <xpath expr="//field[@name='name']" position="before">
                 <div>
                     <label for="partner_sequence" class="oe_edit_only"/>
-                    <field name="partner_sequence"/>
+                    <field name="partner_sequence" string="ID"/>
                 </div>
             </xpath>
             <xpath expr="//field[@name='street']" position="attributes">
