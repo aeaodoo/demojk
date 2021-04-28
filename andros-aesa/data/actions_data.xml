@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- @author Carlos A. Garcia -->
+<odoo>
+    <data>
+        <record model="ir.actions.server" id="action_renew_batch">
+            <field name="name">Ejecutar Renovaciones</field>
+            <field name="model_id" ref="model_res_renewal"/>
+            <field name="binding_model_id" ref="model_res_renewal"/>
+            <field name="state">code</field>
+            <field name="code">model._action_renew_batch_result()</field>
+        </record>
+
+    </data>
+</odoo>

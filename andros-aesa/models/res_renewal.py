@@ -2,6 +2,7 @@
 from odoo import fields, models, api, _
 from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import UserError, Warning
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -18,8 +19,9 @@ class ResRenewal(models.Model):
 
     name = fields.Char(string=u'Número', default=_compute_name, readonly=True)
     partner_id = fields.Many2one('res.partner', string='Cliente', required=True)
-    date_start = fields.Date(string='Fecha Inicio', required=True)
-    date_end = fields.Date(string='Fecha Fin')
+    # date_start = fields.Date(string='Fecha Inicio', required=True)
+    # date_end = fields.Date(string='Fecha Fin')
+    # lead_id = fields.Many2one('crm.lead')
     to_expire = fields.Boolean(string=u'Próxima a expirar', default=False, readonly=False)
     state = fields.Selection(selection=[
         ('draft', 'Borrador'),
@@ -55,7 +57,8 @@ class ResRenewal(models.Model):
     hardware_software = fields.Boolean('Hardware o Software', related='partner_id.hardware_software', readonly=False)
     have_systems_area = fields.Boolean('Cuentan con area de sistemas', related='partner_id.have_systems_area', readonly=False)
     computers_in_network = fields.Integer('Cuantos equipo hay en su red', related='partner_id.computers_in_network', readonly=False)
-    description_aesa = fields.Text('Descripción', related='partner_id.description_aesa', readonly=False)
+    description_aesa = fields.Text(u'Descripción', related='partner_id.description_aesa', readonly=False)
+    description_crm = fields.Text('Notas internas', related='partner_id.description_crm', readonly=False)
     personality = fields.Selection('Personalidad del cliente', related='partner_id.personality', readonly=False)
     necessity = fields.Selection('Necesidad', related='partner_id.necessity', readonly=False)
     impact = fields.Selection('Impacto', related='partner_id.impact', readonly=False)
@@ -63,6 +66,10 @@ class ResRenewal(models.Model):
     authority = fields.Selection('Autoridad', related='partner_id.authority', readonly=False)
     has_server = fields.Selection('Cuentan con servidor', related='partner_id.has_server', readonly=False)
     server_type = fields.Selection('Tipo de servidor', related='partner_id.server_type', readonly=False)
+    own_server = fields.Selection('Servidor propio', related='partner_id.own_server', readonly=False)
+    cut_date = fields.Date('Fecha de corte', related='partner_id.cut_date', readonly=False)
+    ip_server = fields.Char(u'Dirección IP', related='partner_id.ip_server', readonly=False)
+    url_server = fields.Char('OP Activa (URL)', related='partner_id.url_server', readonly=False)
     recurring_customer = fields.Selection('Cliente recurrente de timbres', related='partner_id.recurring_customer', readonly=False)
     number_rings = fields.Selection('Número de timbres', related='partner_id.number_rings', readonly=False)
     last_sale = fields.Date('Fecha de última venta', related='partner_id.last_sale', readonly=False)
@@ -74,8 +81,6 @@ class ResRenewal(models.Model):
     serial_number_aesa = fields.Char(related='aspel_system_id.serial_number_aesa')
     version = fields.Char('Versión', related='aspel_system_id.version')
     type_id = fields.Many2one(related='aspel_system_id.type_id', string='Tipo')
-    # lead_id = fields.Many2one('crm.lead')
-    # partner_id = fields.Many2one('res.partner')
     new_date = fields.Date('Fecha renovación', related='aspel_system_id.new_date')
 
     def action_draft(self):
@@ -150,3 +155,25 @@ class ResRenewal(models.Model):
         for ren in renov_ids:
             ren.action_expired()
         _logger.info("::::: Finished Renovations schedule :::::")
+
+    @api.model
+    def _action_renew_batch(self):
+        _logger.info("::::: Starting Renovations Batch :::::")
+        count = 0
+        orders = self.env['res.renewal'].browse(self._context.get('active_ids', []))
+        for record in orders:
+            record.action_renew()
+            count += 1
+        self.env.cr.commit()
+        _logger.info("::::: Finished Renovations Batch :::::")
+        return count
+
+    @api.model
+    def _action_renew_batch_result(self):
+        """ Separados el update value en db del mensaje al Usuario pq el Warning no deja escribir
+            en la base de datos detenindo la acción write() del metodo.
+        @return:
+        """
+        renewed = self._action_renew_batch()
+        message = _('Proceso finalizado correctamente! Renovado(s) %i registro(s)' % renewed)
+        raise Warning(message)

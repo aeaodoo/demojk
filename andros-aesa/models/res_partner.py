@@ -24,13 +24,14 @@ class ResPartner(models.Model):
     renewals_count = fields.Integer(compute='_compute_renewals_count', string=u"Número de Renovaciones")
     has_renewal = fields.Boolean(compute='_compute_renewals_count', store=True)
     purchase_licenses = fields.Boolean('Compra de licencias')
-    system_implementation = fields.Boolean('Implementación de sistemas')
-    system_customization = fields.Boolean('Personalización de sistemas')
-    training = fields.Boolean('Capacitación')
+    system_implementation = fields.Boolean(u'Implementación de sistemas')
+    system_customization = fields.Boolean(u'Personalización de sistemas')
+    training = fields.Boolean(u'Capacitación')
     hardware_software = fields.Boolean('Hardware o Software')
     have_systems_area = fields.Boolean('Cuentan con area de sistemas')
     computers_in_network = fields.Integer('Cuantos equipo hay en su red')
     description_aesa = fields.Text('Descripción')
+    description_crm = fields.Text('Notas internas')
     personality = fields.Selection(
         [
             ('amarillo', 'Amarillo'),
@@ -75,6 +76,11 @@ class ResPartner(models.Model):
         [
             ('local', 'Servidor local'),
             ('cloud', 'Propio cloud'),
+        ],
+        'Tipo de servidor'
+    )
+    own_server = fields.Selection(
+        [
             ('cloud_aesa', 'Cloud AESA'),
             ('cloud_basico', 'Cloud básico'),
             ('cloud_estandar', 'Cloud Server estándar'),
@@ -86,10 +92,10 @@ class ResPartner(models.Model):
             ('cloud_xxxl', 'Cloud Server XXXL'),
             ('cloud_dedicado', 'Cloud Server dedicado'),
         ],
-        'Tipo de servidor'
+        'Servidor propio'
     )
     cut_date = fields.Date('Fecha de corte')
-    ip_server = fields.Char('Dirección IP')
+    ip_server = fields.Char(u'Dirección IP')
     url_server = fields.Char('OP Activa (URL)')
     recurring_customer = fields.Selection(
         [('0', 'No'),('1', 'Si')], 'Cliente recurrente de timbres'
@@ -108,7 +114,7 @@ class ResPartner(models.Model):
         ('100000','100000')],
         'Número de timbres'
     )
-    last_sale = fields.Date('Fecha de última venta')
+    last_sale = fields.Date(u'Fecha de última venta')
     aspel_systems = fields.One2many(
         'aspel.system',
         'partner_id'

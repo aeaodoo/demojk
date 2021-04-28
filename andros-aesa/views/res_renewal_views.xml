@@ -160,11 +160,6 @@
                             <field name="type_id"/>
                             <field name="new_date"/>
                         </group>
-                        <group name="vigencia" string="Vigencia">
-                            <field name="date_start"/>
-                            <field name="date_end"/>
-<!--                            <field name="to_expire"/>-->
-                        </group>
                     </group>
                     <notebook>
                         <page name="crm" string="CRM">
@@ -182,6 +177,10 @@
                                 <group name="g2">
                                     <field name="has_server"/>
                                     <field name="server_type" attrs="{'invisible': [('has_server', '!=', '1')]}"/>
+                                    <field name="own_server" attrs="{'invisible': [('server_type', '!=', 'cloud')]}"/>
+                                    <field name="cut_date" attrs="{'invisible': [('server_type', '!=', 'cloud')]}"/>
+                                    <field name="ip_server" attrs="{'invisible': [('server_type', '!=', 'cloud')]}"/>
+                                    <field name="url_server" attrs="{'invisible': [('server_type', '!=', 'cloud')]}" widget="url"/>
                                     <field name="recurring_customer"/>
                                     <field name="number_rings" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
                                     <field name="last_sale" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
@@ -189,6 +188,7 @@
                             </group>
                             <group name="g3">
                                 <field name="description_aesa"/>
+                                <field name="description_crm"/>
                             </group>
 <!--                            <group name="g4">-->
 <!--                                <field name="aspel_systems"/>-->

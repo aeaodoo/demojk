@@ -23,6 +23,10 @@ class CrmLead(models.Model):
 
         return next
 
+    # ESTE METODO GENERA ERROR DE INSTALACION/ACTUALIZACION
+    # def planned_revenue(self):
+    #     pass
+
     def _compute_planned_revenue_aesa(self):
         total = 0
         if self.partner_id:
@@ -103,6 +107,11 @@ class CrmLead(models.Model):
         [
             ('local', 'Servidor local'),
             ('cloud', 'Propio cloud'),
+        ],
+        'Tipo de servidor'
+    )
+    own_server = fields.Selection(
+        [
             ('cloud_aesa', 'Cloud AESA'),
             ('cloud_basico', 'Cloud básico'),
             ('cloud_estandar', 'Cloud Server estándar'),
@@ -114,7 +123,7 @@ class CrmLead(models.Model):
             ('cloud_xxxl', 'Cloud Server XXXL'),
             ('cloud_dedicado', 'Cloud Server dedicado'),
         ],
-        'Tipo de servidor'
+        'Servidor propio'
     )
     cut_date = fields.Date('Fecha de corte')
     ip_server = fields.Char('Dirección IP')
@@ -193,7 +202,8 @@ class CrmLead(models.Model):
         res['recurring_customer'] = self.recurring_customer
         res['number_rings'] = self.number_rings
         res['last_sale'] = self.last_sale
-
+        res['description_crm'] = self.description
+        res['own_server'] = self.own_server
         aspel_lines = []
 
         for line in self.aspel_systems:

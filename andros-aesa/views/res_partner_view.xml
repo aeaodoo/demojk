@@ -21,9 +21,10 @@
                     <group>
                         <field name="has_server"/>
                         <field name="server_type" attrs="{'invisible': [('has_server', '!=', '1')]}"/>
-                        <field name="cut_date" attrs="{'invisible': [('has_server', '!=', '1')]}"/>
-                        <field name="ip_server" attrs="{'invisible': [('has_server', '!=', '1')]}"/>
-                        <field name="url_server" attrs="{'invisible': [('has_server', '!=', '1')]}" widget="url"/>
+                        <field name="own_server" attrs="{'invisible': [('server_type', '!=', 'cloud')]}"/>
+                        <field name="cut_date" attrs="{'invisible': [('server_type', '!=', 'cloud')]}"/>
+                        <field name="ip_server" attrs="{'invisible': [('server_type', '!=', 'cloud')]}"/>
+                        <field name="url_server" attrs="{'invisible': [('server_type', '!=', 'cloud')]}" widget="url"/>
                         <field name="recurring_customer"/>
                         <field name="number_rings" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
                         <field name="last_sale" attrs="{'invisible': [('recurring_customer', '!=', '1')]}"/>
@@ -31,6 +32,7 @@
                     </group>
                     <group>
                         <field name="description_aesa"/>
+                        <field name="description_crm"/>
                     </group>
                 </page>
             </notebook>
