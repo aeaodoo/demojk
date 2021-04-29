@@ -13,11 +13,7 @@ class ResRenewal(models.Model):
     _description = 'Renovaciones'
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
 
-    def _compute_name(self):
-        sequence = self.env['ir.sequence'].next_by_code('sequence.res.renewal')
-        return sequence
-
-    name = fields.Char(string=u'Número', default=_compute_name, readonly=True)
+    name = fields.Char(string=u'Número', required=False, readonly=True)
     partner_id = fields.Many2one('res.partner', string='Cliente', required=True)
     # date_start = fields.Date(string='Fecha Inicio', required=True)
     # date_end = fields.Date(string='Fecha Fin')
@@ -82,6 +78,16 @@ class ResRenewal(models.Model):
     version = fields.Char('Versión', related='aspel_system_id.version')
     type_id = fields.Many2one(related='aspel_system_id.type_id', string='Tipo')
     new_date = fields.Date('Fecha renovación', related='aspel_system_id.new_date')
+
+    @api.model
+    def create(self, vals):
+        if 'company_id' in vals:
+            vals['name'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).\
+                next_by_code('sequence.res.renewal')
+        else:
+            vals['name'] = self.env['ir.sequence'].next_by_code('sequence.res.renewal')
+        result = super(ResRenewal, self).create(vals)
+        return result
 
     def action_draft(self):
         self.write({'state': 'draft'})

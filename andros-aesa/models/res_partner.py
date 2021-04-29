@@ -18,7 +18,6 @@ class ResPartner(models.Model):
     partner_sequence = fields.Char(
         string="Identificador",
         size=24,
-        default=get_default_partner_sequence,
         readonly=True
     )
     renewals_count = fields.Integer(compute='_compute_renewals_count', string=u"Número de Renovaciones")
@@ -130,12 +129,8 @@ class ResPartner(models.Model):
 
     @api.model
     def create(self, vals):
+        vals['partner_sequence'] = self.env['ir.sequence'].next_by_code('sequence.res.partner')
         rec = super(ResPartner, self).create(vals)
-        current_sequence = self.get_default_partner_sequence()
-        if(rec.partner_sequence == current_sequence):
-            vals['partner_sequence'] = \
-            self.env['ir.sequence'].next_by_code('sequence.res.partner')
-
         return rec
 
     def renewals_tree_view(self):

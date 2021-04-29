@@ -41,6 +41,7 @@
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
             <field eval="False" name="company_id"/>
+            <field name="implementation">no_gap</field>
         </record>
     </data>
 
